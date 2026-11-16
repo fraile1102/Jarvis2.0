@@ -1,0 +1,10 @@
+{
+  "name": "JARVIS HOME",
+  "short_name": "JARVIS",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#050b16",
+  "theme_color": "#050b16",
+  "lang": "es",
+  "description": "Asistente doméstico JARVIS HOME"
+}

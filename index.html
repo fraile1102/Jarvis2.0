@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050b16"><meta name="description" content="JARVIS HOME - asistente doméstico">
+<link rel="manifest" href="manifest.webmanifest">
+<title>JARVIS HOME</title>
+<style>
+:root{--bg:#050b16;--panel:rgba(9,25,45,.78);--line:rgba(67,180,255,.25);--blue:#36baff;--cyan:#7be7ff;--muted:#7896ae;--white:#e8f7ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 38%,#0c2742 0,#071426 36%,#030811 78%);color:var(--white);font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(rgba(60,170,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(60,170,255,.035) 1px,transparent 1px);background-size:38px 38px;mask-image:linear-gradient(to bottom,black,transparent 90%)}
+header{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--line);background:rgba(2,10,20,.45);position:relative;z-index:1}
+.brand{letter-spacing:.22em;font-size:13px;color:var(--cyan);font-weight:700}.status{font-size:11px;color:#78d6ff;letter-spacing:.12em}.status:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#36e6a5;margin-right:8px;box-shadow:0 0 10px #36e6a5}
+main{max-width:1100px;margin:auto;padding:18px 18px 36px}.topline{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:8px 2px 20px}.greeting{font-size:clamp(19px,3vw,27px);font-weight:300;letter-spacing:.04em}.clock{text-align:right;color:var(--cyan);font-variant-numeric:tabular-nums}.clock strong{font-size:clamp(23px,4vw,34px);font-weight:300;display:block}.clock span{font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
+.dashboard{display:grid;grid-template-columns:1fr minmax(230px,1.25fr) 1fr;gap:14px;align-items:stretch}.stack{display:grid;gap:14px}.panel{border:1px solid var(--line);background:linear-gradient(145deg,rgba(12,34,57,.78),rgba(5,16,31,.8));border-radius:15px;padding:16px;box-shadow:inset 0 0 24px rgba(30,140,220,.045),0 8px 30px #0003;min-height:128px}.panel h3{margin:0 0 12px;font-size:11px;font-weight:650;letter-spacing:.18em;color:#80d9ff;text-transform:uppercase}.panel p{margin:0;color:#9cb8ce;font-size:13px;line-height:1.5}.value{font-size:23px;color:var(--white);font-weight:300}.core-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:360px;border:1px solid rgba(64,183,255,.18);border-radius:18px;background:radial-gradient(circle,rgba(20,100,160,.17),rgba(4,14,27,.45) 65%);position:relative;overflow:hidden}
+.core{width:min(58vw,245px);aspect-ratio:1;border-radius:50%;position:relative;display:grid;place-items:center;filter:drop-shadow(0 0 18px rgba(39,178,255,.28))}
+.core:before,.core:after{content:"";position:absolute;border-radius:50%;inset:5%;border:1px solid rgba(70,200,255,.8);box-shadow:0 0 22px rgba(40,170,255,.3),inset 0 0 25px rgba(40,170,255,.14);animation:spin 18s linear infinite}
+.core:after{inset:15%;border:2px dashed rgba(93,219,255,.55);animation:spin 28s linear infinite reverse}
+.ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(63,171,255,.25);transform:scale(.82);box-shadow:0 0 0 13px rgba(52,163,255,.035),0 0 0 27px rgba(52,163,255,.025)}
+.orb{width:43%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d7fbff,#5edaff 18%,#1678bb 48%,#061d38 75%);box-shadow:0 0 18px #45c8ff,0 0 55px rgba(30,159,255,.55),inset -10px -14px 25px #001126;animation:pulse 3.2s ease-in-out infinite}
+.core.listening .orb{animation:pulse .7s ease-in-out infinite;box-shadow:0 0 25px #8af2ff,0 0 85px #28baff}
+.core-label{margin-top:18px;letter-spacing:.28em;font-size:12px;color:var(--cyan)}.core-sub{margin-top:6px;font-size:10px;letter-spacing:.15em;color:var(--muted)}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes pulse{50%{transform:scale(1.08);filter:brightness(1.25)}}
+.controls{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-top:18px}.btn{border:1px solid rgba(75,190,255,.45);background:rgba(13,53,83,.65);color:#dff8ff;border-radius:999px;padding:11px 16px;font-size:12px;letter-spacing:.04em;cursor:pointer}.btn.primary{background:linear-gradient(110deg,#087eb9,#14508a);box-shadow:0 0 18px #168dcc55}.btn:active{transform:scale(.97)}
+.bottom{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;margin-top:14px}.chatlog{height:130px;overflow:auto;font-size:13px;color:#b6d2e5;line-height:1.55}.chatline{padding:5px 0;border-bottom:1px solid rgba(90,170,220,.1)}.chatline b{color:#7cdbff;font-weight:600}.entry{display:flex;gap:8px;margin-top:10px}.entry input{min-width:0;flex:1;background:#061426;border:1px solid var(--line);border-radius:9px;color:white;padding:11px}
+.small{font-size:10px;color:#65839b;letter-spacing:.08em}.memory-list{max-height:130px;overflow:auto;font-size:12px;color:#aac4d8}.memory-item{padding:6px 0;border-bottom:1px solid #17314a}.footer{text-align:center;color:#4f718b;font-size:10px;letter-spacing:.12em;margin-top:22px}
+@media(max-width:760px){.dashboard{grid-template-columns:1fr 1fr}.core-wrap{grid-column:1/-1;grid-row:1;min-height:330px}.stack{display:contents}.stack .panel{min-height:115px}.bottom{grid-template-columns:1fr}.topline{align-items:center}}
+@media(max-width:390px){header{padding:14px}.panel{padding:13px}.dashboard{gap:9px}.stack .panel{min-height:108px}.btn{padding:10px 13px}}
+</style>
+</head>
+<body>
+<header><div class="brand">JARVIS <span style="color:#e5f7ff">HOME</span></div><div class="status">SISTEMA EN LÍNEA · INTERFAZ LOCAL</div></header>
+<main>
+ <div class="topline"><div><div class="small">ASISTENTE PERSONAL DOMÓTICO</div><div class="greeting">A su disposición.</div></div><div class="clock"><strong id="time">--:--</strong><span id="date">Cargando fecha</span></div></div>
+ <section class="dashboard">
+  <div class="stack">
+   <div class="panel"><h3>Casa</h3><div class="value">En espera</div><p>Los controles de iluminación y habitaciones se conectarán en una próxima fase.</p></div>
+   <div class="panel"><h3>Ambiente</h3><div class="value" id="weather">-- °C</div><p id="weatherText">Meteorología pendiente de configurar.</p><button class="btn" style="margin-top:10px" onclick="getWeather()">Consultar ubicación</button></div>
+  </div>
+  <div class="core-wrap">
+   <div class="core" id="core"><div class="ring"></div><div class="orb"></div></div>
+   <div class="core-label">J.A.R.V.I.S.</div><div class="core-sub" id="state">SISTEMA PREPARADO</div>
+   <div class="controls"><button class="btn primary" onclick="listen()">Hablar con JARVIS</button><button class="btn" onclick="speak('Estoy a su disposición. ¿En qué puedo ayudarle?')">Probar voz</button></div>
+  </div>
+  <div class="stack">
+   <div class="panel"><h3>Seguridad</h3><div class="value">Sin conexión</div><p>Cámaras, sensores y alarmas se integrarán cuando seleccionemos los dispositivos compatibles.</p></div>
+   <div class="panel"><h3>Sistema</h3><div class="value" id="sys">Preparado</div><p>Memoria local activa · Conexión domótica pendiente.</p></div>
+  </div>
+ </section>
+ <section class="bottom">
+  <div class="panel"><h3>Comunicación</h3><div class="chatlog" id="chat"><div class="chatline"><b>JARVIS:</b> Buenas tardes. JARVIS está a su disposición.</div></div><div class="entry"><input id="message" placeholder="Escriba un mensaje..." onkeydown="if(event.key==='Enter')send()"><button class="btn primary" onclick="send()">Enviar</button></div><div class="small" style="margin-top:8px">La conversación de esta versión se procesa localmente; todavía no está conectada a una IA externa.</div></div>
+  <div class="panel"><h3>Memoria y recordatorios</h3><div class="memory-list" id="memory"></div><div class="entry"><input id="note" placeholder="Guardar un recordatorio..."><button class="btn" onclick="saveNote()">Guardar</button></div><button class="btn" style="margin-top:8px" onclick="clearMemory()">Borrar memoria local</button></div>
+ </section>
+ <div class="footer">JARVIS HOME · PROTOTIPO 0.1 · MÓDULOS DOMÓTICOS PENDIENTES</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+function tick(){const d=new Date();$('time').textContent=d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});$('date').textContent=d.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
+tick();setInterval(tick,1000);
+function addLine(who,msg){const el=document.createElement('div');el.className='chatline';const b=document.createElement('b');b.textContent=who+': ';el.append(b,document.createTextNode(msg));$('chat').append(el);$('chat').scrollTop=$('chat').scrollHeight;}
+function speak(text){if(!('speechSynthesis'in window)){addLine('JARVIS','La síntesis de voz no está disponible en este navegador.');return;}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='es-ES';u.rate=.88;u.pitch=.82;const voices=speechSynthesis.getVoices();const v=voices.find(x=>x.lang==='es-ES')||voices.find(x=>x.lang.startsWith('es'));if(v)u.voice=v;speechSynthesis.speak(u);$('state').textContent='RESPUESTA EN CURSO';u.onend=()=>$('state').textContent='SISTEMA PREPARADO';}
+function respond(raw){const t=raw.toLowerCase();let r='Por ahora puedo conversar mediante comandos básicos. La conexión con inteligencia artificial se incorporará en la siguiente fase.';
+if(t.includes('hola')||t.includes('buenas'))r='Buenas. Me alegra escucharle. ¿En qué puedo ayudarle?';
+else if(t.includes('hora'))r='Son las '+new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})+'.';
+else if(t.includes('fecha')||t.includes('día'))r='Hoy es '+new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+'.';
+else if(t.includes('cómo estás')||t.includes('como estas'))r='Todos los sistemas de esta interfaz están preparados. Aún quedan módulos por conectar.';
+else if(t.includes('ayuda'))r='Puede preguntarme la hora, la fecha o guardar un recordatorio. La domótica llegará en próximas versiones.';
+else if(t.includes('recordatorio'))r='Por supuesto. Escriba el recordatorio en el panel de memoria y lo guardaré en esta tablet.';
+addLine('JARVIS',r);speak(r);}
+function send(){const i=$('message'),v=i.value.trim();if(!v)return;addLine('USTED',v);i.value='';respond(v);}
+function listen(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){addLine('JARVIS','Este navegador no permite reconocimiento de voz. Puede escribir en el cuadro de comunicación.');return;}const rec=new SR();rec.lang='es-ES';rec.interimResults=false;rec.maxAlternatives=1;$('core').classList.add('listening');$('state').textContent='ESCUCHANDO';rec.onresult=e=>{const v=e.results[0][0].transcript;addLine('USTED',v);respond(v);};rec.onerror=()=>{addLine('JARVIS','No he podido captar el mensaje. Compruebe el permiso del micrófono.');$('state').textContent='SISTEMA PREPARADO';};rec.onend=()=>{$('core').classList.remove('listening');if($('state').textContent==='ESCUCHANDO')$('state').textContent='SISTEMA PREPARADO';};rec.start();}
+function getNotes(){try{return JSON.parse(localStorage.getItem('jarvis_notes')||'[]')}catch{return []}}
+function renderNotes(){const box=$('memory');box.innerHTML='';const a=getNotes();if(!a.length){box.textContent='Todavía no hay recordatorios guardados.';return;}a.slice().reverse().forEach(n=>{const d=document.createElement('div');d.className='memory-item';d.textContent=n.date+' · '+n.text;box.append(d);});}
+function saveNote(){const i=$('note'),v=i.value.trim();if(!v)return;const a=getNotes();a.push({text:v,date:new Date().toLocaleString('es-ES')});localStorage.setItem('jarvis_notes',JSON.stringify(a));i.value='';renderNotes();addLine('JARVIS','Recordatorio guardado en la memoria local de esta tablet.');}
+function clearMemory(){if(confirm('¿Desea borrar todos los recordatorios guardados en esta tablet?')){localStorage.removeItem('jarvis_notes');renderNotes();}}
+async function getWeather(){if(!navigator.geolocation){$('weatherText').textContent='La ubicación no está disponible en este navegador.';return;}$('weatherText').textContent='Solicitando permiso de ubicación...';navigator.geolocation.getCurrentPosition(async p=>{try{const url=`https://api.open-meteo.com/v1/forecast?latitude=${p.coords.latitude}&longitude=${p.coords.longitude}&current=temperature_2m,weather_code&timezone=auto`;const data=await(await fetch(url)).json();$('weather').textContent=Math.round(data.current.temperature_2m)+' °C';$('weatherText').textContent='Condiciones actuales · ubicación aproximada de la tablet.';}catch{$('weatherText').textContent='No se ha podido consultar la meteorología.';}},()=>{$('weatherText').textContent='Permiso de ubicación denegado. Puede activarlo en los ajustes del navegador.';});}
+renderNotes();
+if('serviceWorker'in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body></html>

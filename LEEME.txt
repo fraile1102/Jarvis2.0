@@ -1,0 +1,17 @@
+JARVIS HOME 0.1 — paquete inicial
+
+CONTENIDO
+- index.html: interfaz principal, voz del navegador, comandos básicos y recordatorios locales.
+- manifest.webmanifest: datos de instalación PWA.
+- sw.js: caché básica para funcionamiento de la interfaz tras la primera carga.
+
+IMPORTANTE
+Esta versión NO es una APK y todavía NO está conectada a una IA externa, luces, cámaras, sensores ni alarmas. La voz depende de las funciones disponibles en Chrome/Android y requiere conceder permiso al micrófono. La meteorología solicita ubicación solo si pulsas «Consultar ubicación».
+
+INSTALACIÓN COMO PWA
+1. Publica el contenido de esta carpeta en un alojamiento HTTPS (por ejemplo, un hosting estático).
+2. Abre la dirección HTTPS en Chrome de la tablet.
+3. Menú ⋮ > «Instalar aplicación» o «Añadir a pantalla de inicio».
+4. Abre JARVIS desde su icono.
+
+No basta con descomprimir el ZIP para instalarlo como aplicación. El hosting HTTPS es necesario para una PWA instalable fiable. No compartas contraseñas ni datos privados al configurar el hosting.
