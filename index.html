@@ -59,14 +59,16 @@ function tick(){const d=new Date();$('time').textContent=d.toLocaleTimeString('e
 tick();setInterval(tick,1000);
 function addLine(who,msg){const el=document.createElement('div');el.className='chatline';const b=document.createElement('b');b.textContent=who+': ';el.append(b,document.createTextNode(msg));$('chat').append(el);$('chat').scrollTop=$('chat').scrollHeight;}
 function speak(text){if(!('speechSynthesis'in window)){addLine('JARVIS','La síntesis de voz no está disponible en este navegador.');return;}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='es-ES';u.rate=.88;u.pitch=.82;const voices=speechSynthesis.getVoices();const v=voices.find(x=>x.lang==='es-ES')||voices.find(x=>x.lang.startsWith('es'));if(v)u.voice=v;speechSynthesis.speak(u);$('state').textContent='RESPUESTA EN CURSO';u.onend=()=>$('state').textContent='SISTEMA PREPARADO';}
-function respond(raw){const t=raw.toLowerCase();let r='Por ahora puedo conversar mediante comandos básicos. La conexión con inteligencia artificial se incorporará en la siguiente fase.';
-if(t.includes('hola')||t.includes('buenas'))r='Buenas. Me alegra escucharle. ¿En qué puedo ayudarle?';
-else if(t.includes('hora'))r='Son las '+new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})+'.';
-else if(t.includes('fecha')||t.includes('día'))r='Hoy es '+new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+'.';
-else if(t.includes('cómo estás')||t.includes('como estas'))r='Todos los sistemas de esta interfaz están preparados. Aún quedan módulos por conectar.';
-else if(t.includes('ayuda'))r='Puede preguntarme la hora, la fecha o guardar un recordatorio. La domótica llegará en próximas versiones.';
-else if(t.includes('recordatorio'))r='Por supuesto. Escriba el recordatorio en el panel de memoria y lo guardaré en esta tablet.';
-addLine('JARVIS',r);speak(r);}
+async function respond(raw) {
+  $('state').textContent = 'CONSULTANDO IA';
+
+  const r = await jarvisAskGemini(raw);
+
+  addLine('JARVIS', r);
+  speak(r);
+
+  $('state').textContent = 'SISTEMA PREPARADO';
+}
 function send(){const i=$('message'),v=i.value.trim();if(!v)return;addLine('USTED',v);i.value='';respond(v);}
 function listen(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){addLine('JARVIS','Este navegador no permite reconocimiento de voz. Puede escribir en el cuadro de comunicación.');return;}const rec=new SR();rec.lang='es-ES';rec.interimResults=false;rec.maxAlternatives=1;$('core').classList.add('listening');$('state').textContent='ESCUCHANDO';rec.onresult=e=>{const v=e.results[0][0].transcript;addLine('USTED',v);respond(v);};rec.onerror=()=>{addLine('JARVIS','No he podido captar el mensaje. Compruebe el permiso del micrófono.');$('state').textContent='SISTEMA PREPARADO';};rec.onend=()=>{$('core').classList.remove('listening');if($('state').textContent==='ESCUCHANDO')$('state').textContent='SISTEMA PREPARADO';};rec.start();}
 function getNotes(){try{return JSON.parse(localStorage.getItem('jarvis_notes')||'[]')}catch{return []}}
